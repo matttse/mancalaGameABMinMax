@@ -11,18 +11,18 @@ eval_functions = {"mancala":{"basic":mancalaCheckWin, "better":mancalaBetterChec
 # Player Options
 players = {"random":RandomPlayer,
            "human":HumanPlayer,
-           "minmax":MinMaxPlayer,
-           "pruning":AlphaBetaPruningPlayer}
+           "minimax":MinMaxPlayer,
+           "alphabeta":AlphaBetaPruningPlayer}
 
 # Run the game
 def main():
     args = parse_args()
-    if args.p1 == "minmax" or args.p1 == "pruning":
+    if args.p1 == "minimax" or args.p1 == "alphabeta":
         e1 = eval_functions[args.game][args.e1]
         p1 = players[args.p1](e1, args.d1)
     else:
         p1 = players[args.p1]()
-    if args.p2 == "minmax" or args.p2 == "pruning":
+    if args.p2 == "minimax" or args.p2 == "alphabeta":
         e2 = eval_functions[args.game][args.e2]
         p2 = players[args.p2](e2, args.d2)
     else:
@@ -30,14 +30,14 @@ def main():
     game = games[args.game](*args.game_args)
 
     if args.games == 1:
-        play_game(game, p1, p2, args.show)
+        GameBoard(game, p1, p2, args.show)
     else:
         p1_wins = 0
         p2_wins = 0
         draws = 0
         for i in range(args.games):
             if i % 2:
-                result = play_game(game, p1, p2, args.show)
+                result = GameBoard(game, p1, p2, args.show)
                 if result.winner == 1:
                     p1_wins += 1
                 elif result.winner == -1:
@@ -45,7 +45,7 @@ def main():
                 else:
                     draws += 1
             else:
-                result = play_game(game, p2, p1, args.show)
+                result = GameBoard(game, p2, p1, args.show)
                 if result.winner == -1:
                     p1_wins += 1
                 elif result.winner == 1:
@@ -73,7 +73,7 @@ def parse_args():
     p.add_argument("-d2", type=int, default=4, help="Search depth for player 2.")
     return p.parse_args()
 
-def play_game(game, player1, player2, show=False):
+def GameBoard(game, player1, player2, show=False):
     ##Plays a game then returns the final state
     while not game.isTerminal:
         if show:
@@ -83,7 +83,7 @@ def play_game(game, player1, player2, show=False):
         else:
             m = player2.getMove(game)
         if m not in game.availableMoves:
-            raise Exception("invalid move: " + str(m))
+            raise Exception("pick another move, invalid move: " + str(m))
         game = game.makeMove(m)
     if show:
         print(game, "\n")
