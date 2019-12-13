@@ -17,6 +17,13 @@ def mancalaCheckWin(mancala_game):
         return mancala_game.scores[0] - mancala_game.scores[1]
 
 # Check number of move without searching
+# Checks available moves that will capture other player's stones
+# 1 + number of stones on the other side and this is added the the respective player
+# Finds the number of stones on each side of the board for player 1 or player 2
+# Returns +/- (max score + stones on side + stones from capturing moves) if player wins
+# Else returns the difference between their scores and difference between stones on their side
+# And difference between number of stones from capturing moves 
+# And difference between moves that will grant an extra move
 def mancalaBetterCheckWin(mancala_game):
 	marblesSide1 = sum(mancala_game.bins[0])
 	marblesSide2 = sum(mancala_game.bins[1])
