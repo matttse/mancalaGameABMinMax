@@ -1,9 +1,9 @@
 from random import choice
 from sys import stdin
-
+from math import inf
 
 class HumanPlayer:
-    """Player that gets moves from command line input."""
+    ##Player that gets moves from command line input
     def __init__(self, *args):
         self.name = "Human"
 
@@ -31,9 +31,23 @@ class HumanPlayer:
 
 
 class RandomPlayer:
-    """Player that selects a random legal move."""
+    ##Player that selects a random legal move
     def __init__(self, *args):
         self.name = "Random"
 
     def getMove(self, game):
         return choice(game.availableMoves)
+
+class MinMaxPlayer:
+    ##Gets moves by depth min-max search.
+    def __init__(self, boardEval, depthBound):
+        self.name = "MinMax"
+        self.boardEval = boardEval
+        self.depthBound = depthBound
+
+class AlphaBetaPruningPlayer:
+    ##Get moves by depth search with alpha beta pruning
+    def __init__(self, boardEval, depthBound):
+        self.name = "Pruning"
+        self.boardEval = boardEval
+        self.depthBound = depthBound

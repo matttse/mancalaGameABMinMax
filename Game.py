@@ -64,27 +64,15 @@ def main():
 
 def parse_args():
     p = ArgumentParser()
-    p.add_argument("game", type=str, choices=list(games.keys()),
-                   help="Game to be played.")
-    p.add_argument("p1", type=str, choices=list(players.keys()),
-                   help="Player 1 type.")
-    p.add_argument("p2", type=str, choices=list(players.keys()),
-                   help="Player 2 type.")
-    p.add_argument("-games", type=int, default=1,
-                   help="Number of games to play.")
-    p.add_argument("--show", action="store_true", help=
-                   "Set this flag to print the board every round.")
-    p.add_argument("-game_args", type=int, nargs="*", default=[],
-                   help="Optional arguments to pass to the game constructor, "+
-                   "such as board dimensions. Must be listed in order.")
-    p.add_argument("-e1", type=str, choices=eval_options, default="basic",
-                   help="Board eval function for player 1.")
-    p.add_argument("-e2", type=str, choices=eval_options, default="basic",
-                   help="Board eval function for player 2.")
-    p.add_argument("-d1", type=int, default=4,
-                   help="Search depth for player 1.")
-    p.add_argument("-d2", type=int, default=4,
-                   help="Search depth for player 2.")
+    p.add_argument("game", type=str, choices=list(games.keys()), help="Game to be played.")
+    p.add_argument("p1", type=str, choices=list(players.keys()), help="Player 1 type.")
+    p.add_argument("p2", type=str, choices=list(players.keys()), help="Player 2 type.")
+    p.add_argument("-games", type=int, default=1, help="Number of games to play.")
+    p.add_argument("--show", action="store_true", help="Set this flag to print the board every round.")
+    p.add_argument("-eval1", type=str, choices=eval_options, default="basic", help="Board eval function for player 1.")
+    p.add_argument("-eval2", type=str, choices=eval_options, default="basic", help="Board eval function for player 2.")
+    p.add_argument("-depth1", type=int, default=4, help="Search depth for player 1.")
+    p.add_argument("-depth2", type=int, default=4, help="Search depth for player 2.")
     return p.parse_args()
 
 def play_game(game, player1, player2, show=False):
