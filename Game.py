@@ -6,8 +6,8 @@ from Checker import normalCheck, betterCheck
 # Game Type Class object
 games = {"mancala":Mancala}
 # Evaluation Options
-check_options = ["basic", "better"]
-check_functions = {"mancala":{"basic":normalCheck, "better":betterCheck}}
+check_options = ["normal", "better"]
+check_functions = {"mancala":{"normal":normalCheck, "better":betterCheck}}
 
 # Player Options
 players = {"random":RandomPlayer,
@@ -67,10 +67,9 @@ def parse_args():
     p.add_argument("p2", type=str, choices=list(players.keys()), help="Select Player 2 Type")
     p.add_argument("-games", type=int, default=1, help="Number of games to play.")
     p.add_argument("--show", action="store_true", help="Set this flag to print the board every round.")
-    p.add_argument("-game_args", type=int, nargs="*", default=[], help="Optional arguments to pass to the game constructor, "+
-                   "such as board dimensions. Must be listed in order.")
-    p.add_argument("-e1", type=str, choices=check_options, default="basic", help="Board eval function for player 1.")
-    p.add_argument("-e2", type=str, choices=check_options, default="basic", help="Board eval function for player 2.")
+    p.add_argument("-game_args", type=int, nargs="*", default=[], help="Optional arguments to type to the game, must be typed in order.")
+    p.add_argument("-e1", type=str, choices=check_options, default="normal", help="Board eval function for player 1.")
+    p.add_argument("-e2", type=str, choices=check_options, default="normal", help="Board eval function for player 2.")
     p.add_argument("-d1", type=int, default=4, help="Search depth for player 1.")
     p.add_argument("-d2", type=int, default=4, help="Search depth for player 2.")
     return p.parse_args()
