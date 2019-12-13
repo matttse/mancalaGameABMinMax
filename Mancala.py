@@ -1,6 +1,8 @@
 import numpy as np
+
 ## Mancala as defined http://boardgames.about.com/cs/mancala/ht/play_mancala.htm
 class Mancala:
+    # Basic Game Components
     def __init__(self, bins_per_player=6, stones_per_bin=4, game=None):
         if game is None: # create new game
             self.bins = np.empty([2, bins_per_player], dtype=int)
@@ -17,9 +19,8 @@ class Mancala:
 
     def _print_char(self, i):
         return i
-
+    # Display of Board via console
     def __repr__(self):
-        # An console representation of the board state.
         if self._repr is None:
             # Player 0 scoring area
             if self.turn == 1:
@@ -55,12 +56,11 @@ class Mancala:
         self._repr = "".join(rows)
         return self._repr
 
-    def makeMove(self, move):
-        # Returns a new Mancala instance in which move has been play
-
-        # A valid move is the index (column) of a bin in which the current
-        # player has stones. stones in that bin are sown counter-clockwise
-        # il they run out, at which point a capture may occur.
+    # Returns a new Mancala instance in which move has been play
+    # A valid move is the index (column) of a bin in which the current
+    # player has stones. stones in that bin are sown counter-clockwise
+    # until they run out, at which point a point may occur.
+    def makeMove(self, move):       
         new_game = Mancala(game=self)
         new_game.bins = self.bins.copy()
         side = 0 if self.turn == 1 else 1 # start sowing in row 0 or row 1
@@ -95,13 +95,13 @@ class Mancala:
             new_game.turn = self.turn # take another turn
         else:
             new_game.turn = -self.turn
-            # check for capture
+            # check for point
             if side == start_side and new_game.bins[(side, bin)] == 1:
-                captured_bin = ((side + 1) % 2, bin)
-                if new_game.bins[captured_bin] != 0:
-                    new_game.scores[side] += new_game.bins[captured_bin] + 1
+                point_bin = ((side + 1) % 2, bin)
+                if new_game.bins[point_bin] != 0:
+                    new_game.scores[side] += new_game.bins[point_bin] + 1
                     new_game.bins[(side, bin)] = 0
-                    new_game.bins[captured_bin] = 0
+                    new_game.bins[point_bin] = 0
 
         # check for empty sides
         if new_game.bins[0].sum() == 0:
@@ -115,19 +115,19 @@ class Mancala:
 
         return new_game
 
-#The @property decorator makes it so that you can access self.availableMoves
-#as a field instead of calling self.availableMoves() as a function.
+##Set these functions as a property
+    # Check for available moves
     @property
     def availableMoves(self):
-        # List of legal moves for the current player.
+        # List of legal moves for the current player
         if self._moves is None:
             side = 0 if self.turn == 1 else 1
             self._moves = [int(m) for m in np.nonzero(self.bins[side])[0]]
         return self._moves
 
+    # Boolean indicating whether the game has ended
     @property
     def isTerminal(self):
-        # Boolean indicating whether the game has ended.
         if self._terminal is None:
             if self.scores.max() > (self.bins.sum() + self.scores.sum()) // 2:
                 self._terminal = True
@@ -136,7 +136,7 @@ class Mancala:
             else:
                 self._terminal = False
         return self._terminal
-
+    # Check for winner
     @property
     def winner(self):
         ##+1 if the first player (maximizer) has won. -1 if the second player

@@ -3,7 +3,7 @@ import numpy as np
 # Difference between the scores of each player
 # Returns positive max possible score if player +1 has won
 # Returns negative max possible score if player -1 has won
-def mancalaCheckWin(mancala_game):
+def normalCheck(mancala_game):
     if(mancala_game.isTerminal):
         if mancala_game.winner == 1:
             return mancala_game.scores.max()
@@ -24,7 +24,7 @@ def mancalaCheckWin(mancala_game):
 # Else returns the difference between their scores and difference between stones on their side
 # And difference between number of stones from capturing moves 
 # And difference between moves that will grant an extra move
-def mancalaBetterCheckWin(mancala_game):
+def betterCheck(mancala_game):
 	marblesSide1 = sum(mancala_game.bins[0])
 	marblesSide2 = sum(mancala_game.bins[1])
 	marblesDifference = marblesSide1 - marblesSide2
