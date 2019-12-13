@@ -1,10 +1,10 @@
 import numpy as np
 ## Mancala as defined http://boardgames.about.com/cs/mancala/ht/play_mancala.htm
 class Mancala:
-    def __init__(self, bins_per_player=6, stones_per_house=4, game=None):
+    def __init__(self, bins_per_player=6, stones_per_bin=4, game=None):
         if game is None: # create new game
             self.bins = np.empty([2, bins_per_player], dtype=int)
-            self.bins.fill(stones_per_house)
+            self.bins.fill(stones_per_bin)
             self.scores = np.zeros(2, dtype=int)
             self.turn = 1
         else: # copy existing game
@@ -19,7 +19,7 @@ class Mancala:
         return i
 
     def __repr__(self):
-        """An console representation of the board state."""
+        # An console representation of the board state.
         if self._repr is None:
             # Player 0 scoring area
             if self.turn == 1:
@@ -56,16 +56,16 @@ class Mancala:
         return self._repr
 
     def makeMove(self, move):
-        """Returns a new Mancala instance in which move has been played.
+        # Returns a new Mancala instance in which move has been play
 
-        A valid move is the index (column) of a house in which the current
-        player has stones. stones in that house are sown counter-clockwise
-        until they run out, at which point a capture may occur."""
+        # A valid move is the index (column) of a bin in which the current
+        # player has stones. stones in that bin are sown counter-clockwise
+        # il they run out, at which point a capture may occur.
         new_game = Mancala(game=self)
         new_game.bins = self.bins.copy()
         side = 0 if self.turn == 1 else 1 # start sowing in row 0 or row 1
         start_side = side
-        house = move
+        bin = move
 
         # grab stones
         stones = self.bins[side, move]
@@ -74,10 +74,10 @@ class Mancala:
 
         while stones > 0: # sow
             if side == 0:
-                house -= 1
+                bin -= 1
             else:
-                house += 1
-            if (house == -1) or (house == size): # reached end of side
+                bin += 1
+            if (bin == -1) or (bin == size): # reached end of side
                 if side == start_side: # sow in the scoring pile
                     new_game.scores[side] += 1
                     stones -= 1
@@ -85,23 +85,23 @@ class Mancala:
                         break
                 side = (side + 1) % 2
                 if side == 1:
-                    house += 1
+                    bin += 1
                 else:
-                    house -= 1
-            new_game.bins[(side, house)] += 1
+                    bin -= 1
+            new_game.bins[(side, bin)] += 1
             stones -= 1
 
-        if (house == -1) or (house == size):
+        if (bin == -1) or (bin == size):
             new_game.turn = self.turn # take another turn
         else:
             new_game.turn = -self.turn
             # check for capture
-            if side == start_side and new_game.bins[(side, house)] == 1:
-                captured_house = ((side + 1) % 2, house)
-                if new_game.bins[captured_house] != 0:
-                    new_game.scores[side] += new_game.bins[captured_house] + 1
-                    new_game.bins[(side, house)] = 0
-                    new_game.bins[captured_house] = 0
+            if side == start_side and new_game.bins[(side, bin)] == 1:
+                captured_bin = ((side + 1) % 2, bin)
+                if new_game.bins[captured_bin] != 0:
+                    new_game.scores[side] += new_game.bins[captured_bin] + 1
+                    new_game.bins[(side, bin)] = 0
+                    new_game.bins[captured_bin] = 0
 
         # check for empty sides
         if new_game.bins[0].sum() == 0:
@@ -119,7 +119,7 @@ class Mancala:
 #as a field instead of calling self.availableMoves() as a function.
     @property
     def availableMoves(self):
-        """List of legal moves for the current player."""
+        # List of legal moves for the current player.
         if self._moves is None:
             side = 0 if self.turn == 1 else 1
             self._moves = [int(m) for m in np.nonzero(self.bins[side])[0]]
@@ -127,7 +127,7 @@ class Mancala:
 
     @property
     def isTerminal(self):
-        """Boolean indicating whether the game has ended."""
+        # Boolean indicating whether the game has ended.
         if self._terminal is None:
             if self.scores.max() > (self.bins.sum() + self.scores.sum()) // 2:
                 self._terminal = True
@@ -139,9 +139,9 @@ class Mancala:
 
     @property
     def winner(self):
-        """+1 if the first player (maximizer) has won. -1 if the second player
-        (minimizer) has won. 0 if the game is a draw. Raises an AttributeError
-        if accessed on a non-terminal state."""
+        ##+1 if the first player (maximizer) has won. -1 if the second player
+        # (minimizer) has won. 0 if the game is a draw. Raises an AttributeError
+        # if accessed on a non-terminal state
         if not self.isTerminal:
             raise AttributeError("Non-terminal states have no winner.")
         if self.scores[0] > self.scores[1]:

@@ -1,24 +1,20 @@
-
 from argparse import ArgumentParser
-
 from Mancala import Mancala
-from BasicPlayers import HumanPlayer, RandomPlayer
-from MinMaxPlayers import MinMaxPlayer, PruningPlayer
-from Heuristics import mancalaBasicEval, mancalaBetterEval
-
+from Players import HumanPlayer, RandomPlayer, MinMaxPlayer, AlphaBetaPruningPlayer
+from Checker import mancalaCheckWin, mancalaBetterCheckWin
+# Game Type Class object
 games = {"mancala":Mancala}
-
+# Evaluation Options
 eval_options = ["basic", "better"]
-eval_functions = {"mancala":{"basic":mancalaBasicEval,
-                             "better":mancalaBetterEval}}
+eval_functions = {"mancala":{"basic":mancalaCheckWin, "better":mancalaBetterCheckWin}}
 
-
+# Player Options
 players = {"random":RandomPlayer,
            "human":HumanPlayer,
            "minmax":MinMaxPlayer,
-           "pruning":PruningPlayer}
+           "pruning":AlphaBetaPruningPlayer}
 
-
+# Run the game
 def main():
     args = parse_args()
     if args.p1 == "minmax" or args.p1 == "pruning":
@@ -61,7 +57,7 @@ def main():
         print(p2_wins, "wins for player 2 (" + p2.name + ")")
         if draws > 0:
             print(draws, "draws")
-
+# Display args to change game type
 def parse_args():
     p = ArgumentParser()
     p.add_argument("game", type=str, choices=list(games.keys()), help="Game to be played.")
@@ -69,14 +65,16 @@ def parse_args():
     p.add_argument("p2", type=str, choices=list(players.keys()), help="Player 2 type.")
     p.add_argument("-games", type=int, default=1, help="Number of games to play.")
     p.add_argument("--show", action="store_true", help="Set this flag to print the board every round.")
-    p.add_argument("-eval1", type=str, choices=eval_options, default="basic", help="Board eval function for player 1.")
-    p.add_argument("-eval2", type=str, choices=eval_options, default="basic", help="Board eval function for player 2.")
-    p.add_argument("-depth1", type=int, default=4, help="Search depth for player 1.")
-    p.add_argument("-depth2", type=int, default=4, help="Search depth for player 2.")
+    p.add_argument("-game_args", type=int, nargs="*", default=[], help="Optional arguments to pass to the game constructor, "+
+                   "such as board dimensions. Must be listed in order.")
+    p.add_argument("-e1", type=str, choices=eval_options, default="basic", help="Board eval function for player 1.")
+    p.add_argument("-e2", type=str, choices=eval_options, default="basic", help="Board eval function for player 2.")
+    p.add_argument("-d1", type=int, default=4, help="Search depth for player 1.")
+    p.add_argument("-d2", type=int, default=4, help="Search depth for player 2.")
     return p.parse_args()
 
 def play_game(game, player1, player2, show=False):
-    """Plays a game then returns the final state."""
+    ##Plays a game then returns the final state
     while not game.isTerminal:
         if show:
             print(game)
