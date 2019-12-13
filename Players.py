@@ -7,7 +7,7 @@ class HumanPlayer:
     def __init__(self, *args):
         self.name = "Human"
 
-    def getMove(self, game):
+    def getNextMove(self, game):
         move = None
         while move not in game.availableMoves:
             print([move for move in game.availableMoves])
@@ -35,21 +35,21 @@ class RandomPlayer:
     def __init__(self, *args):
         self.name = "Random"
 
-    def getMove(self, game):
+    def getNextMove(self, game):
         return choice(game.availableMoves)
 
-class MinMaxPlayer:
+class MiniMaxPlayer:
     ##Gets moves by depth min-max search.
     def __init__(self, boardEval, depthBound):
-        self.name = "MinMax"
+        self.name = "MiniMax"
         self.boardEval = boardEval
         self.depthBound = depthBound
-    def getMove(self, game_state):
-        best_value, best_move = self.bounded_min_max(game_state, 0)
+    def getNextMove(self, game_state):
+        best_value, best_move = self.limited_mini_max(game_state, 0)
         return best_move
 
 
-    def bounded_min_max(self, state, depth):
+    def limited_mini_max(self, state, depth):
         if(state.isTerminal or self.depthBound == depth):
             return self.boardEval(state), None
         # best_value = self.boardEval(state)
@@ -60,7 +60,7 @@ class MinMaxPlayer:
         best_move = None
         for move in state.availableMoves:
             next_state = state.makeMove(move)
-            value, boundedMove = self.bounded_min_max(next_state, depth+1)
+            value, boundedMove = self.limited_mini_max(next_state, depth+1)
             # if(value == None):
             #     continue
             if(state.turn==1):
@@ -73,13 +73,13 @@ class MinMaxPlayer:
                     best_move = move
         return best_value, best_move
 
-class AlphaBetaPruningPlayer:
-    ##Get moves by depth search with alpha beta pruning
+##Get moves by depth search with alpha beta pruning
+class AlphaBetaPruningPlayer:    
     def __init__(self, boardEval, depthBound):
-        self.name = "Pruning"
+        self.name = "AlphaBetaPruning"
         self.boardEval = boardEval
         self.depthBound = depthBound
-    def getMove(self, game_state):
+    def getNextMove(self, game_state):
         best_value, best_move = self.alpha_beta(game_state, inf, -1*inf, 0)
         return best_move
 

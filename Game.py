@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 from Mancala import Mancala
-from Players import HumanPlayer, RandomPlayer, MinMaxPlayer, AlphaBetaPruningPlayer
+from Players import HumanPlayer, RandomPlayer, MiniMaxPlayer, AlphaBetaPruningPlayer
 from Checker import normalCheck, betterCheck
 
 # Game Type Class object
@@ -12,7 +12,7 @@ check_functions = {"mancala":{"basic":normalCheck, "better":betterCheck}}
 # Player Options
 players = {"random":RandomPlayer,
            "human":HumanPlayer,
-           "minimax":MinMaxPlayer,
+           "minimax":MiniMaxPlayer,
            "alphabeta":AlphaBetaPruningPlayer}
 
 # Run the game
@@ -58,12 +58,13 @@ def main():
         print(p2_wins, "wins for player 2 (" + p2.name + ")")
         if draws > 0:
             print(draws, "draws")
+
 # Display args to change game type
 def parse_args():
     p = ArgumentParser()
-    p.add_argument("game", type=str, choices=list(games.keys()), help="Game to be played.")
-    p.add_argument("p1", type=str, choices=list(players.keys()), help="Player 1 type.")
-    p.add_argument("p2", type=str, choices=list(players.keys()), help="Player 2 type.")
+    p.add_argument("game", type=str, choices=list(games.keys()), help="Type mancala")
+    p.add_argument("p1", type=str, choices=list(players.keys()), help="Select Player 1 Type")
+    p.add_argument("p2", type=str, choices=list(players.keys()), help="Select Player 2 Type")
     p.add_argument("-games", type=int, default=1, help="Number of games to play.")
     p.add_argument("--show", action="store_true", help="Set this flag to print the board every round.")
     p.add_argument("-game_args", type=int, nargs="*", default=[], help="Optional arguments to pass to the game constructor, "+
@@ -81,9 +82,9 @@ def GameBoard(game, player1, player2, show=False):
         if show:
             print(game)
         if game.turn == 1:
-            m = player1.getMove(game)
+            m = player1.getNextMove(game)
         else:
-            m = player2.getMove(game)
+            m = player2.getNextMove(game)
         if m not in game.availableMoves:
             raise Exception("pick another move, invalid move: " + str(m))
         game = game.makeMove(m)
