@@ -7,8 +7,9 @@ This Mancala project allows for users to run the game Mancala from the command l
 There are a few arguments that should be used to maximize benefits:
 ```
 usage: Game.py [mancala] [random, human, alphabeta, minimax] [random, human, alphabeta, minimax] [--show]
+example: python Game.py mancala human alphabeta --show
+example: python Game.py mancala minimax alphabeta --show
 
-optional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -games GAMES          Number of games to play.
